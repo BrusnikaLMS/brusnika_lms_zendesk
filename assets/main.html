@@ -107,25 +107,35 @@
       const client = ZAFClient.init();
       if (!client) { showError('ZAF SDK not available.'); return; }
 
-      let metadata, userData;
+      let userData, accountData;
       try {
-        [metadata, userData] = await Promise.all([
-          client.metadata(),
+        [userData, accountData] = await Promise.all([
           client.get('currentUser'),
+          client.get('account.subdomain'),
         ]);
       } catch (e) {
         showError('Failed to retrieve user data from Zendesk.');
         return;
       }
 
-      // zcli serves settings as array [{k:v},...]; production as flat object
-      const rawSettings = metadata?.settings;
-      const settings = Array.isArray(rawSettings)
-        ? Object.assign({}, ...rawSettings)
-        : (rawSettings || {});
-      const ssoSecret = settings.sso_secret || '';
-      if (!ssoSecret) {
-        showError('SSO Secret not configured. Go to Zendesk Admin → Apps → Brusnika.LMS → Settings.');
+      const subdomain = String(accountData?.['account.subdomain'] || '');
+      if (!subdomain) { showError('Could not determine Zendesk account.'); return; }
+
+      // Auto-register portal and get SSO secret from backend
+      let ssoSecret;
+      try {
+        const connectRes = await client.request({
+          url: `${LMS_URL}/api/zendesk-auto-connect`,
+          type: 'POST',
+          contentType: 'application/json',
+          data: JSON.stringify({ subdomain }),
+          dataType: 'json',
+          secure: false,
+        });
+        ssoSecret = connectRes?.sso_secret || '';
+        if (!ssoSecret) { showError('Could not initialize LMS connection.'); return; }
+      } catch (e) {
+        showError('Failed to connect to Brusnika.LMS.');
         return;
       }
 

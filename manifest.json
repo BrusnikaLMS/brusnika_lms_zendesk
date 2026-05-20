@@ -18,13 +18,5 @@
       }
     }
   },
-  "parameters": [
-    {
-      "name": "sso_secret",
-      "type": "text",
-      "secure": true,
-      "required": true,
-      "description": "SSO secret key from Brusnika.LMS admin settings (Integrations → Zendesk → SSO Secret)"
-    }
-  ]
+  "parameters": []
 }
