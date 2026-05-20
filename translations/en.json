@@ -1,0 +1,14 @@
+{
+  "app": {
+    "name": "Brusnika.LMS",
+    "short_description": "Embed Brusnika.LMS inside Zendesk. Sync agents as employees, assign courses, log completions as tickets.",
+    "long_description": "Brusnika.LMS for Zendesk embeds your learning management system directly inside the Zendesk sidebar. Agents get seamless single sign-on access to their training courses without leaving Zendesk. Admins can sync Zendesk agents as LMS employees, map groups to departments, and automatically create Zendesk tickets when courses are assigned or completed.",
+    "installation_instructions": "1. Enter the SSO secret key from your Brusnika.LMS admin panel (Integrations → Zendesk → SSO Secret).\n2. Click Install.\n3. Open any ticket — the Brusnika.LMS icon will appear in the top bar."
+  },
+  "parameters": {
+    "sso_secret": {
+      "label": "SSO Secret Key",
+      "helpText": "Found in Brusnika.LMS admin panel under Integrations → Zendesk → SSO Secret."
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "name": "Brusnika.LMS",
+  "author": {
+    "name": "Brusnika.Solutions",
+    "email": "info@brusnika-solutions.com",
+    "url": "https://brusnika-lms.com/"
+  },
+  "defaultLocale": "en",
+  "private": false,
+  "version": "1.0.0",
+  "frameworkVersion": "2.0",
+  "singleInstall": true,
+  "location": {
+    "support": {
+      "top_bar": {
+        "url": "assets/main.html",
+        "autoHide": false
+      }
+    }
+  },
+  "parameters": [
+    {
+      "name": "sso_secret",
+      "type": "text",
+      "secure": true,
+      "required": true,
+      "description": "SSO secret key from Brusnika.LMS admin settings (Integrations → Zendesk → SSO Secret)"
+    }
+  ]
+}
