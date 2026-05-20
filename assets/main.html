@@ -80,7 +80,7 @@
   <div id="dbg"></div>
 
   <script>
-    const LMS_URL = 'https://sa.eu.brusnika-apps.com';
+    const LMS_URL = 'https://sa.us.brusnika-apps.com';
 
     function log(msg) {
       const d = document.getElementById('dbg');
@@ -189,7 +189,7 @@
         return;
       }
 
-      const lmsUrl = `${LMS_URL}/?zendesk=Y`
+      const lmsUrl = `${LMS_URL}/index.php?zendesk=Y`
         + `&agent_id=${encodeURIComponent(agentId)}`
         + `&email=${encodeURIComponent(email)}`
         + `&name=${name}`
