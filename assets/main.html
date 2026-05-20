@@ -56,11 +56,6 @@
       border: none;
     }
 
-    #dbg {
-      position: fixed; bottom: 0; left: 0; right: 0;
-      background: rgba(0,0,0,0.75); color: #0f0; font: 10px monospace;
-      padding: 4px 6px; max-height: 80px; overflow-y: auto; z-index: 9999;
-    }
   </style>
 </head>
 <body>
@@ -77,16 +72,9 @@
   </div>
 
   <iframe id="lms-frame" allow="fullscreen"></iframe>
-  <div id="dbg"></div>
 
   <script>
     const LMS_URL = 'https://sa.us.brusnika-apps.com';
-
-    function log(msg) {
-      const d = document.getElementById('dbg');
-      if (d) d.innerHTML += msg + '<br>';
-      console.log('[ZAF]', msg);
-    }
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -116,10 +104,8 @@
     }
 
     async function init() {
-      log('init start');
       const client = ZAFClient.init();
       if (!client) { showError('ZAF SDK not available.'); return; }
-      log('ZAFClient ok');
 
       let metadata, userData;
       try {
@@ -128,24 +114,20 @@
           client.get('currentUser'),
         ]);
       } catch (e) {
-        log('metadata/user error: ' + e);
         showError('Failed to retrieve user data from Zendesk.');
         return;
       }
-      log('metadata ok');
 
       // zcli serves settings as array [{k:v},...]; production as flat object
       const rawSettings = metadata?.settings;
       const settings = Array.isArray(rawSettings)
         ? Object.assign({}, ...rawSettings)
         : (rawSettings || {});
-      log('settings: ' + JSON.stringify(settings).slice(0, 80));
       const ssoSecret = settings.sso_secret || '';
       if (!ssoSecret) {
         showError('SSO Secret not configured. Go to Zendesk Admin → Apps → Brusnika.LMS → Settings.');
         return;
       }
-      log('secret ok len=' + ssoSecret.length);
 
       const user    = userData['currentUser'];
       const agentId = String(user?.id || '');
@@ -153,7 +135,6 @@
       const name    = encodeURIComponent(String(user?.name || ''));
       const ts      = String(Math.floor(Date.now() / 1000));
       const isAdmin = (user?.role === 'admin' || user?.role === 'owner') ? '1' : '0';
-      log(`user id=${agentId} email=${email} role=${user?.role}`);
 
       if (!agentId) { showError('Could not determine agent identity.'); return; }
 
@@ -165,7 +146,6 @@
         showError('Failed to generate SSO signature.');
         return;
       }
-      log('sig ok');
 
       // Pre-flight via ZAF proxy (avoids CORS): verify /api/zendesk-sso before loading iframe
       try {
@@ -177,15 +157,12 @@
           dataType: 'json',
           secure: false,
         });
-        log('sso: ' + JSON.stringify(ssoRes).slice(0, 160));
         if (!ssoRes?.valid) {
-          showError('SSO failed: ' + (ssoRes?.error || JSON.stringify(ssoRes)));
+          showError('SSO failed: ' + (ssoRes?.error || 'invalid response'));
           return;
         }
       } catch (e) {
-        const detail = e?.responseText || e?.message || String(e);
-        log('sso error: ' + detail.slice(0, 160));
-        showError('SSO request failed — see debug bar');
+        showError('SSO request failed.');
         return;
       }
 
@@ -197,19 +174,9 @@
         + `&is_admin=${isAdmin}`
         + `&sig=${sig}`;
 
-      log('url: ' + lmsUrl.slice(0, 200));
-      log('loading LMS iframe...');
       showFrame(lmsUrl);
-
       client.invoke('resize', { width: '700px', height: '85vh' });
     }
-
-    // Capture debug messages from the LMS iframe
-    window.addEventListener('message', (e) => {
-      if (e.data && typeof e.data === 'object' && e.data.zdsk_log) {
-        log('lms: ' + e.data.zdsk_log);
-      }
-    });
 
     init();
   </script>
