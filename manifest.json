@@ -10,6 +10,7 @@
   "version": "1.0.0",
   "frameworkVersion": "2.0",
   "singleInstall": true,
+  "domainWhitelist": ["sa.eu.brusnika-apps.com", "sa.us.brusnika-apps.com"],
   "location": {
     "support": {
       "top_bar": {
@@ -17,6 +18,5 @@
         "autoHide": false
       }
     }
-  },
-  "parameters": []
+  }
 }

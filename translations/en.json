@@ -1,14 +1,8 @@
 {
   "app": {
     "name": "Brusnika.LMS",
-    "short_description": "Embed Brusnika.LMS inside Zendesk. Sync agents as employees, assign courses, log completions as tickets.",
-    "long_description": "Brusnika.LMS for Zendesk embeds your learning management system directly inside the Zendesk sidebar. Agents get seamless single sign-on access to their training courses without leaving Zendesk. Admins can sync Zendesk agents as LMS employees, map groups to departments, and automatically create Zendesk tickets when courses are assigned or completed.",
-    "installation_instructions": "1. Enter the SSO secret key from your Brusnika.LMS admin panel (Integrations → Zendesk → SSO Secret).\n2. Click Install.\n3. Open any ticket — the Brusnika.LMS icon will appear in the top bar."
-  },
-  "parameters": {
-    "sso_secret": {
-      "label": "SSO Secret Key",
-      "helpText": "Found in Brusnika.LMS admin panel under Integrations → Zendesk → SSO Secret."
-    }
+    "short_description": "Embed Brusnika.LMS inside Zendesk. Train agents without leaving your support workflow.",
+    "long_description": "Brusnika.LMS for Zendesk embeds your learning management system directly inside the Zendesk top bar. Agents get seamless single sign-on access to their training courses without leaving Zendesk. Admins can assign courses, track completion rates, and manage learning content — all connected to your Zendesk account automatically.\n\n**Data disclosure:** This app accesses the following Zendesk data: the current agent's profile (ID, name, email address) and role for single sign-on authentication; the list of agents and groups to sync users and departments into Brusnika.LMS; and the ability to create tickets to notify agents of new training assignments. Agent profile data is transmitted to and processed on Brusnika.LMS servers (sa.eu.brusnika-apps.com), operated by Brusnika Solutions. No Zendesk ticket content, customer data, or conversation history is accessed or stored. For details, see our Privacy Policy at https://brusnika-lms.com/privacy",
+    "installation_instructions": "1. Click Install.\n2. Open any ticket — the Brusnika.LMS icon will appear in the top bar.\n3. Click the icon to launch the LMS. Your Zendesk account is connected automatically — no additional setup required."
   }
 }
