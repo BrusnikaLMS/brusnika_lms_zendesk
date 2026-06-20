@@ -7,10 +7,13 @@
   },
   "defaultLocale": "en",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "frameworkVersion": "2.0",
   "singleInstall": true,
   "domainWhitelist": ["sa.eu.brusnika-apps.com", "sa.us.brusnika-apps.com"],
+  "oauth": {
+    "client_id": "zdg-brusnikalms"
+  },
   "location": {
     "support": {
       "top_bar": {

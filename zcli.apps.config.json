@@ -2,7 +2,5 @@
   "plan": "0",
   "app_id": "0",
   "installation_id": "0",
-  "parameters": {
-    "sso_secret": "REPLACE_WITH_YOUR_SSO_SECRET"
-  }
+  "parameters": {}
 }

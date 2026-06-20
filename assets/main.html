@@ -74,7 +74,7 @@
   <iframe id="lms-frame" allow="fullscreen"></iframe>
 
   <script>
-    const LMS_URL = 'https://sa.us.brusnika-apps.com';
+    const LMS_URL = 'https://sa.eu.brusnika-apps.com';
 
     function showError(msg) {
       document.getElementById('loading').style.display = 'none';
@@ -90,10 +90,10 @@
       frame.src = url;
     }
 
-    async function hmacSha256(secret, message) {
+    async function hmacSha256(signingKey, message) {
       const enc = new TextEncoder();
       const key = await crypto.subtle.importKey(
-        'raw', enc.encode(secret),
+        'raw', enc.encode(signingKey),
         { name: 'HMAC', hash: 'SHA-256' },
         false, ['sign']
       );
@@ -121,8 +121,8 @@
       const subdomain = String(accountData?.['account.subdomain'] || '');
       if (!subdomain) { showError('Could not determine Zendesk account.'); return; }
 
-      // Auto-register portal and get SSO secret from backend
-      let ssoSecret;
+      // Auto-register portal and get auth key from backend
+      let lmsAuthKey;
       try {
         const connectRes = await client.request({
           url: `${LMS_URL}/api/zendesk-auto-connect`,
@@ -130,10 +130,10 @@
           contentType: 'application/json',
           data: JSON.stringify({ subdomain }),
           dataType: 'json',
-          secure: false,
+          secure: true,
         });
-        ssoSecret = connectRes?.sso_secret || '';
-        if (!ssoSecret) { showError('Could not initialize LMS connection.'); return; }
+        lmsAuthKey = connectRes?.sso_secret || '';
+        if (!lmsAuthKey) { showError('Could not initialize LMS connection.'); return; }
       } catch (e) {
         showError('Failed to connect to Brusnika.LMS.');
         return;
@@ -151,7 +151,7 @@
       let sig;
       try {
         const payload = `${agentId}|${email}|${ts}|${isAdmin}`;
-        sig = await hmacSha256(ssoSecret, payload);
+        sig = await hmacSha256(lmsAuthKey, payload);
       } catch (e) {
         showError('Failed to generate SSO signature.');
         return;
@@ -165,7 +165,7 @@
           contentType: 'application/json',
           data: JSON.stringify({ agent_id: agentId, email, name: decodeURIComponent(name), ts, sig, is_admin: isAdmin }),
           dataType: 'json',
-          secure: false,
+          secure: true,
         });
         if (!ssoRes?.valid) {
           showError('SSO failed: ' + (ssoRes?.error || 'invalid response'));
